@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><title>لوحة التحكم</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#eef4fb;--cd:#fff;--tx:#12263f;--mu:#5b6f88;--pr:#1a6fd4;--bd:#d6e2f1;--ok:#16824a;--bad:#c93a3a;--wn:#b7791f}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0d1623;--cd:#16233a;--tx:#e6eef9;--mu:#93a8c4;--pr:#4b95f0;--bd:#26384f;--ok:#43c283;--bad:#f06a6a;--wn:#e0b04a}}
+:root[data-theme=dark]{--bg:#0d1623;--cd:#16233a;--tx:#e6eef9;--mu:#93a8c4;--pr:#4b95f0;--bd:#26384f;--ok:#43c283;--bad:#f06a6a;--wn:#e0b04a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:Tahoma,"Segoe UI",Arial,sans-serif;line-height:1.5}
+.w{max-width:700px;margin:auto;padding:14px}h1{font-size:20px;margin:6px 0 12px}h2{font-size:16px;margin:0 0 10px}
+.c{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:12px;margin-bottom:12px}
+input{width:100%;padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit;margin-bottom:8px}
+input[type=checkbox]{width:auto;margin:0 0 0 6px}label{display:block;margin-bottom:8px}
+button{background:var(--pr);color:#fff;border:0;border-radius:8px;padding:9px 12px;font:inherit;cursor:pointer;margin:2px}
+button.l{background:transparent;color:var(--pr);border:1px solid var(--bd)}button.d{background:transparent;color:var(--bad);border:1px solid var(--bd)}
+.r{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.mu{color:var(--mu);font-size:13px}.bad{color:var(--bad)}
+.code{font-family:monospace;font-size:18px;letter-spacing:1px;margin:6px 0;direction:ltr;text-align:left}
+.bd{font-size:13px;padding:2px 8px;border-radius:99px;border:1px solid var(--bd)}.s_paid{color:var(--ok)}.s_revoked{color:var(--bad)}.s_active{color:var(--wn)}
+.nw{background:var(--bg);border:2px solid var(--ok);border-radius:10px;padding:10px;margin-top:8px}
+</style></head><body><div class="w" id="app"></div>
+<script>
+var SB='https://qvkxxiextrpbmbuyqttg.supabase.co',KEY='sb_publishable_lNo8hEK6c5iAo7mYdZbMew_mqOcIUQf',TK=sessionStorage.getItem('adm_tk')||'',L=[],q='',nw='';
+var ST={active:'⏳ عليه دفعات',paid:'✅ مدفوع (ملكه)',revoked:'⛔ موقوف'};
+function E(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function v(i){return document.getElementById(i).value}
+function A(h){document.getElementById('app').innerHTML=h}
+function loginUI(m){A('<div class="c" style="max-width:380px;margin:10vh auto"><h1>🔐 لوحة التحكم</h1><input id="em" type="email" placeholder="البريد الإلكتروني" autocomplete="username" dir="ltr"><input id="pw" type="password" placeholder="كلمة السر" autocomplete="current-password" dir="ltr" onkeydown="if(event.key===\'Enter\')login()"><button onclick="login()" style="width:100%">دخول</button><p class="bad">'+E(m||'')+'</p></div>')}
+async function login(){try{var r=await fetch(SB+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'apikey':KEY,'Content-Type':'application/json'},body:JSON.stringify({email:v('em').trim(),password:v('pw')})});var j=await r.json();if(!r.ok||!j.access_token)return loginUI('بيانات الدخول غير صحيحة');TK=j.access_token;sessionStorage.setItem('adm_tk',TK);await load()}catch(e){loginUI('تعذّر الاتصال بالإنترنت')}}
+function out(m){TK='';sessionStorage.removeItem('adm_tk');loginUI(m)}
+async function api(fn,b){var r=await fetch(SB+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'apikey':KEY,'Authorization':'Bearer '+TK,'Content-Type':'application/json'},body:JSON.stringify(b||{})});
+if(r.status==401){out('انتهت الجلسة، سجّل الدخول من جديد');throw 0}
+var j=await r.json().catch(function(){return null});if(!r.ok){if(j&&j.message=='forbidden'){out('هذا الحساب ليس مشرفاً');throw 0}throw new Error(j&&j.message||'خطأ')}return j}
+async function load(){if(!TK)return loginUI();try{L=await api('admin_list');draw()}catch(e){if(e)alert('تعذّر التحميل: '+e.message)}}
+function cp(t){try{navigator.clipboard.writeText(t).then(function(){alert('تم النسخ')},fb)}catch(e){fb()}function fb(){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');alert('تم النسخ')}catch(e){alert(t)}a.remove()}}
+function draw(){var k=q.toLowerCase(),n={a:0,p:0,r:0};L.forEach(function(x){n[x.status[0]]++});
+A('<div class="r"><h1>🔑 أكواد التفعيل</h1><button class="l" onclick="out()">خروج</button></div>'
++'<div class="c"><h2>➕ كود جديد</h2><input id="cn" placeholder="اسم العميل"><input id="cd" type="number" min="1" value="2" placeholder="عدد الأجهزة"><label><input id="cpd" type="checkbox">دفع كل المبلغ (مدفوع من البداية)</label><button onclick="mk()" style="width:100%">إنشاء الكود</button>'+(nw?'<div class="nw"><div class="mu">الكود الجديد:</div><div class="code">'+E(nw)+'</div><button onclick="cp(\''+E(nw)+'\')">نسخ الكود</button></div>':'')+'</div>'
++'<div class="mu" style="margin:0 4px 8px">عليه دفعات: '+n.a+' | مدفوع: '+n.p+' | موقوف: '+n.r+'</div><input id="q" placeholder="ابحث باسم العميل أو الكود..." value="'+E(q)+'" oninput="q=this.value;lst()"><div id="ls">'+rows()+'</div>')}
+function rows(){var k=q.toLowerCase(),a=L.filter(function(x){return !k||String(x.customer||'').toLowerCase().indexOf(k)>-1||x.code.toLowerCase().indexOf(k)>-1});
+return a.length?a.map(function(x){var id=x.id,b='';
+if(x.status!='paid')b+='<button onclick="sts(\''+id+'\',\'paid\')">✅ دفع كل المبلغ</button>';
+if(x.status=='active')b+='<button class="d" onclick="sts(\''+id+'\',\'revoked\')">⛔ إيقاف</button>';
+if(x.status=='revoked')b+='<button onclick="sts(\''+id+'\',\'active\')">▶ إعادة تفعيل</button>';
+if(x.status=='paid')b+='<button class="l" onclick="sts(\''+id+'\',\'active\')">تراجع عن "مدفوع"</button>';
+return '<div class="c"><div class="r"><b>'+E(x.customer||'—')+'</b><span class="bd s_'+x.status+'">'+ST[x.status]+'</span></div><div class="code">'+E(x.code)+'</div><div class="mu">الأجهزة: '+x.devices+' / '+x.max+' — أُنشئ: '+E(String(x.created).slice(0,10))+'</div><div>'+b+'<button class="l" onclick="cp(\''+E(x.code)+'\')">نسخ الكود</button><button class="l" onclick="rs(\''+id+'\')">تفريغ الأجهزة</button><button class="d" onclick="rm(\''+id+'\')">🗑 حذف</button></div></div>'}).join(''):'<p class="mu">لا توجد أكواد.</p>'}
+function lst(){document.getElementById('ls').innerHTML=rows()}
+async function go(fn,b){try{var r=await api(fn,b);await load();return r}catch(e){if(e)alert('فشلت العملية: '+e.message)}}
+async function mk(){var n=v('cn').trim(),d=+v('cd');if(!n)return alert('اكتب اسم العميل');if(!(d>=1))return alert('عدد الأجهزة غير صحيح');
+try{nw=await api('admin_create',{p_customer:n,p_devices:d,p_paid:document.getElementById("cpd").checked});await load()}catch(e){if(e)alert('فشل الإنشاء: '+e.message)}}
+function sts(id,s){var t={paid:'تأكيد: العميل دفع كل المبلغ؟ بعد ما يتحقق التطبيق عنده بيصير ملكه ولا تقدر توقفه على أجهزته.',revoked:'إيقاف هذا الكود؟ بيقفل التطبيق عند العميل عند أول تحقق.',active:'إعادة الكود لحالة "عليه دفعات"؟'}[s];if(confirm(t)){nw='';go('admin_status',{p_id:id,p_status:s})}}
+function rs(id){if(confirm('تفريغ كل أجهزة هذا الكود؟ بيقدر العميل يفعّله من جديد على جهازين.'))go('admin_reset',{p_id:id})}
+function rm(id){if(confirm('حذف الكود نهائياً؟ التطبيقات المفعّلة بحالة "غير مدفوع" رح تتوقف عند أول تحقق.'))go('admin_remove',{p_id:id})}
+if(TK)load();else loginUI();
+</script></body></html>

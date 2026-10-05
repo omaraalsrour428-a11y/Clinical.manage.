@@ -1,0 +1,157 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#1a6fd4"><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-192.png"><title>إدارة العيادة</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#eef4fb;--cd:#fff;--tx:#12263f;--mu:#5b6f88;--pr:#1a6fd4;--bd:#d6e2f1;--ok:#16824a;--bad:#c93a3a}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0d1623;--cd:#16233a;--tx:#e6eef9;--mu:#93a8c4;--pr:#4b95f0;--bd:#26384f;--ok:#43c283;--bad:#f06a6a}}
+:root[data-theme=dark]{--bg:#0d1623;--cd:#16233a;--tx:#e6eef9;--mu:#93a8c4;--pr:#4b95f0;--bd:#26384f;--ok:#43c283;--bad:#f06a6a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:Tahoma,"Segoe UI",Arial,sans-serif;line-height:1.5}
+.w{max-width:900px;margin:auto;padding:14px}
+h1{font-size:20px;margin:6px 0 12px}h2{font-size:16px;margin:0 0 10px}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.c{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:12px;margin-bottom:12px}
+.s b{display:block;font-size:19px;margin-top:2px}.s span{color:var(--mu);font-size:13px}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.mu{color:var(--mu);font-size:13px}
+input,textarea,select{width:100%;padding:9px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit;margin-bottom:8px}
+button{background:var(--pr);color:#fff;border:0;border-radius:8px;padding:9px 14px;font:inherit;cursor:pointer}
+button.l{background:transparent;color:var(--pr);border:1px solid var(--bd)}button.d{background:transparent;color:var(--bad);padding:2px 8px}
+.r{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.r>*{flex:1;min-width:110px}
+.p{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-top:1px solid var(--bd);cursor:pointer}
+.p:first-of-type{border-top:0}
+.x{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:7px 6px;text-align:start;border-bottom:1px solid var(--bd);white-space:nowrap}
+</style></head><body><div class="w" id="app"></div>
+<script>
+var LG='ar';try{LG=localStorage.getItem('clinic_lang')||'ar'}catch(e){}
+var D={'🦷 إدارة العيادة':'🦷 Clinic Manager','🔒 قفل':'🔒 Lock','إيرادات العيادة (المقبوض)':'Clinic revenue (collected)','مدفوعات المخبر':'Lab payments','الصافي بعد المخبر':'Net after lab','إجمالي التكاليف':'Total billed','المتبقي على المرضى':'Outstanding from patients','مستحقات المخبر المتبقية':'Lab dues remaining','عدد المرضى':'Patients','المرضى':'Patients','+ مريض جديد':'+ New patient','مريض جديد':'New patient','📅 المواعيد':'📅 Appointments','لحجز موعد افتح ملف المريض.':'To book, open the patient file.','⚠ مواعيد فائتة:':'⚠ Missed appointments:','لا مواعيد.':'No appointments.','تم ✓':'Done ✓','📊 تقرير حسب الفترة':'📊 Period report','عرض':'Show','إضافة':'Add','التفاصيل المالية الشهرية':'Monthly financials','الشهر':'Month','الإيرادات':'Revenue','المخبر':'Lab','الصافي':'Net','إعدادات ونسخ احتياطي':'Settings & backup','🔑 تغيير الرمز':'🔑 Change code','⬇ تنزيل نسخة احتياطية':'⬇ Download backup','استرجاع من ملف:':'Restore from file:','🔄 إعادة حساب الأرقام':'🔄 Recalculate totals','البيانات محفوظة على هذا الجهاز. نزّل نسخة احتياطية بشكل دوري.':'Data is stored on this device. Download a backup regularly.','لا يوجد مرضى.':'No patients.','مسدّد':'Paid up','→ رجوع':'← Back','تعديل':'Edit','حذف المريض':'Delete patient','التاريخ الطبي:':'Medical history:','الحساب الكلي':'Total billed','المسدّد':'Paid','المتبقي':'Remaining','تكلفة المخبر لحالته':'Lab cost for this patient','العلاجات':'Treatments','الدفعات':'Payments','تسجيل دفعة':'Record payment','📅 حجز موعد':'📅 Book appointment','حجز':'Book','تعديل بيانات المريض':'Edit patient details','حفظ':'Save','إلغاء':'Cancel','المقبوض':'Collected','دفعات المخبر':'Lab payments','علاجات / مرضى':'Treatments / patients','قيمة العلاجات':'Treatment value','جاري الحساب...':'Calculating...','التاريخ':'Date','المريض':'Patient','العلاج':'Treatment','التكلفة':'Cost','نزّل نسخة الآن':'Download backup now',
+'العمر:':'Age:','السكن:':'Address:','الهاتف:':'Phone:','آخر علاج:':'Last treatment:','متبقي ':'Due ',
+'⚠ فشل حفظ آخر تغيير! المساحة ممتلئة أو التخزين غير متاح. نزّل نسخة احتياطية الآن.':'⚠ Last change failed to save! Storage is full or unavailable. Download a backup now.','⚠ مساحة التخزين قاربت تمتلئ. نزّل نسخة احتياطية.':'⚠ Storage is almost full. Download a backup.','💾 مرّ أكثر من أسبوع على آخر نسخة احتياطية.':'💾 It has been over a week since your last backup.','💾 ما نزّلت نسخة احتياطية بعد.':'💾 You have not downloaded a backup yet.',
+'ابحث باسم المريض...':'Search by patient name...','المبلغ':'Amount','ملاحظة / اسم المخبر':'Note / lab name','العملة':'Currency','الاسم':'Name','العمر':'Age','السكن':'Address','رقم الهاتف':'Phone number','التاريخ الطبي (أمراض، حساسية، أدوية...)':'Medical history (conditions, allergies, medications...)','نوع العلاج (حشوة، قلع، تنظيف...)':'Treatment type (filling, extraction, cleaning...)','تكلفة المخبر (اختياري)':'Lab cost (optional)','المبلغ المدفوع':'Amount paid','ملاحظة':'Note',
+'أنشئ رمز دخول (٦ خانات أو أكثر)':'Create an access code (6+ characters)','أدخل رمز الدخول':'Enter the access code','حفظ ودخول':'Save & enter','دخول':'Enter','الرمز قصير':'Code too short','انتظر نصف دقيقة ثم حاول':'Wait 30 seconds, then try again','رمز غير صحيح':'Wrong code','تعذّر فتح قاعدة البيانات: ':'Could not open the database: ','الرمز الجديد (٦ خانات أو أكثر)':'New code (6+ characters)','تم تغيير الرمز':'Code changed',
+'تحذير: فشل حفظ البيانات! نزّل نسخة احتياطية الآن.':'Warning: saving failed! Download a backup now.','المريض غير موجود':'Patient not found','اكتب اسم المريض':'Enter the patient name','أدخل نوع العلاج والتكلفة':'Enter the treatment type and cost','أدخل مبلغاً صحيحاً':'Enter a valid amount','تم حجز الموعد':'Appointment booked','أدخل المبلغ':'Enter the amount','حذف هذا السجل؟':'Delete this record?','حذف المريض وكل سجلاته؟':'Delete the patient and all records?','تمت إعادة حساب الأرقام':'Totals recalculated','ملف غير صالح':'Invalid file','سيتم استبدال البيانات الحالية. متابعة؟':'Current data will be replaced. Continue?','تعذّر إنشاء النسخة: ':'Could not create the backup: ','تفعيل التطبيق':'Activate the app','معرّف جهازك:':'Your device ID:','نسخ المعرّف':'Copy ID','أرسل هذا المعرّف لمزوّد التطبيق ليعطيك كود التفعيل، ثم الصقه هنا.':'Send this ID to the app provider to get your activation code, then paste it here.','كود التفعيل':'Activation code','تفعيل':'Activate','كود غير صالح لهذا الجهاز':'Invalid code for this device','انتهت صلاحية الكود':'The code has expired','تم النسخ':'Copied','أدخل كود التفعيل الذي استلمته':'Enter the activation code you received','الكود غير صحيح':'Invalid code','تم إيقاف هذا الكود. تواصل مع مزوّد التطبيق.':'This code has been suspended. Contact the app provider.','تم تجاوز عدد الأجهزة المسموح لهذا الكود':'This code has reached its device limit','تعذّر الاتصال بالإنترنت. اتصل بالإنترنت للتحقق من الكود.':'No internet connection. Connect to verify the code.','تعذّر التحقق الآن. حاول لاحقاً.':'Could not verify right now. Try again later.'};
+var RX=[[/^1 مريض$/,'1 patient'],[/^(\d[\d,]*) مريض$/,'$1 patients'],[/^🔔 عندك (\d+) موعد اليوم$/,'🔔 $1 appointment(s) today'],[/^عرض المزيد \((\d+)\)$/,'Show more ($1)'],[/^يُعرض آخر 60 علاجاً من (\d+)\.$/,'Showing the latest 60 of $1 treatments.'],[/\(مخبر /g,'(lab ']];
+var SK=Object.keys(D).filter(function(k){return k.length>=6}).sort(function(a,b){return b.length-a.length}),AR=/[\u0600-\u06FF]/;
+function tr(s){if(LG!='en'||!AR.test(s))return s;var t=s.trim(),i=s.indexOf(t),pre=s.slice(0,i),suf=s.slice(i+t.length);if(D[t])return pre+D[t]+suf;
+RX.forEach(function(r){t=t.replace(r[0],r[1])});SK.forEach(function(k){if(t.indexOf(k)>-1)t=t.split(k).join(D[k])});return pre+t+suf}
+function tw(n){if(n.nodeType==3){var x=tr(n.nodeValue);if(x!==n.nodeValue)n.nodeValue=x;return}if(n.nodeType!=1||n.tagName=='SCRIPT')return;
+if(n.placeholder){var p=tr(n.placeholder);if(p!==n.placeholder)n.placeholder=p}if(n.tagName=='TEXTAREA')return;for(var c=n.firstChild;c;c=c.nextSibling)tw(c)}
+new MutationObserver(function(ms){if(LG=='en')ms.forEach(function(m){m.addedNodes.forEach(tw)})}).observe(document.getElementById('app'),{childList:true,subtree:true});
+(function(){var a=window.alert,c=window.confirm,p=window.prompt;window.alert=function(m){a.call(window,tr(String(m)))};window.confirm=function(m){return c.call(window,tr(String(m)))};window.prompt=function(m,d){return p.call(window,tr(String(m)),d)}})();
+function ap_(){var h=document.documentElement;h.lang=LG;h.dir=LG=='en'?'ltr':'rtl';document.title=LG=='en'?'Clinic Manager':'إدارة العيادة'}
+function setLang(){LG=LG=='en'?'ar':'en';try{localStorage.setItem('clinic_lang',LG)}catch(e){}ap_();if(sessionStorage.getItem('cu')&&DB)draw();else gate()}
+ap_();
+var db={lab:[],ap:[],cur:'$',lb:0},st={rev:0,bil:0,ld:0,mon:{}},ix=[],im={},srt=[],dirty=1,view=null,q='',pg=50,P=null,pc=null,DB,tm,RA=today().slice(0,8)+'01',RB=today();
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function E(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function F(n){return (Number(n)||0).toLocaleString('en-US')+' '+E(db.cur)}
+function sum(a,k){return a.reduce(function(s,x){return s+(+x[k]||0)},0)}
+function cost(p){return sum(p.t,'cost')}function paid(p){return sum(p.pay,'amt')}
+function last(p){return p.t.map(function(x){return x.d}).sort().pop()||''}
+function today(){return new Date().toISOString().slice(0,10)}
+function v(id){return document.getElementById(id).value}
+function S(l,x,c){return '<div class="c s"><span>'+l+'</span><b'+(c?' class="'+c+'"':'')+'>'+x+'</b></div>'}
+function odb(){return new Promise(function(ok,no){var r=indexedDB.open('clinic2',1);r.onupgradeneeded=function(){var d=r.result;d.createObjectStore('p',{keyPath:'id'});d.createObjectStore('x',{keyPath:'id'});d.createObjectStore('m')};r.onsuccess=function(){ok(r.result)};r.onerror=function(){no(r.error)}})}
+function rq(r){return new Promise(function(ok,no){r.onsuccess=function(){ok(r.result)};r.onerror=function(){no(r.error)}})}
+function tx(s,m){return DB.transaction(s,m||'readonly')}
+function done(t){return new Promise(function(ok,no){t.oncomplete=ok;t.onerror=t.onabort=function(){no(t.error)}})}
+function mo(){return {lab:db.lab,ap:db.ap,cur:db.cur,lb:db.lb,st:st}}
+function fail(){window.sf=1;alert('تحذير: فشل حفظ البيانات! نزّل نسخة احتياطية الآن.')}
+async function sm(){var t=tx(['m'],'readwrite');t.objectStore('m').put(mo(),'meta');try{await done(t);window.sf=0}catch(e){fail()}}
+function ct(p){var c={rev:0,bil:0,ld:0,mon:{}};p.t.forEach(function(x){c.bil+=+x.cost||0;c.ld+=+x.lab||0});p.pay.forEach(function(x){c.rev+=+x.amt||0;var k=x.d.slice(0,7);c.mon[k]=(c.mon[k]||0)+(+x.amt||0)});return c}
+function ap2(c,s){st.rev+=s*c.rev;st.bil+=s*c.bil;st.ld+=s*c.ld;for(var k in c.mon)st.mon[k]=(st.mon[k]||0)+s*c.mon[k]}
+function ent(p){return {id:p.id,n:p.name,l:last(p),r:cost(p)-paid(p)}}
+async function sv(p){var t=tx(['p','x','m'],'readwrite'),e=ent(p);t.objectStore('p').put(p);t.objectStore('x').put(e);
+if(pc)ap2(pc,-1);var c=ct(p);ap2(c,1);pc=c;t.objectStore('m').put(mo(),'meta');
+try{await done(t);window.sf=0}catch(er){fail()}
+var o=im[p.id];if(o){o.n=e.n;o.l=e.l;o.r=e.r;o.k=e.n.toLowerCase()}else{e.k=e.n.toLowerCase();ix.push(e);im[e.id]=e}dirty=1}
+async function lp(id){P=await rq(tx(['p']).objectStore('p').get(id));pc=P?ct(P):null}
+async function go2(id){await lp(id);if(!P)return alert('المريض غير موجود');view=id;draw()}
+async function rc(quiet){var s={rev:0,bil:0,ld:0,mon:{}},xs=[];
+await new Promise(function(ok,no){var r=tx(['p']).objectStore('p').openCursor();r.onsuccess=function(){var c=r.result;if(!c)return ok();var p=c.value,k=ct(p);s.rev+=k.rev;s.bil+=k.bil;s.ld+=k.ld;for(var m in k.mon)s.mon[m]=(s.mon[m]||0)+k.mon[m];xs.push(ent(p));c.continue()};r.onerror=no});
+st=s;var t=tx(['x','m'],'readwrite');t.objectStore('x').clear();xs.forEach(function(e){t.objectStore('x').put(e)});t.objectStore('m').put(mo(),'meta');await done(t);
+ix=xs;im={};ix.forEach(function(e){e.k=e.n.toLowerCase();im[e.id]=e});dirty=1;if(!quiet){draw();alert('تمت إعادة حساب الأرقام')}}
+async function imp(o){var t=tx(['p','m'],'readwrite');t.objectStore('p').clear();(o.p||[]).forEach(function(p){p.t=p.t||[];p.pay=p.pay||[];t.objectStore('p').put(p)});
+db.lab=o.lab||[];db.ap=o.ap||[];db.cur=o.cur||'$';db.lb=o.lb||0;t.objectStore('m').put(mo(),'meta');await done(t);await rc(true)}
+async function boot(){DB=await odb();var m=await rq(tx(['m']).objectStore('m').get('meta'));
+if(m){db.lab=m.lab||[];db.ap=m.ap||[];db.cur=m.cur||'$';db.lb=m.lb||0;st=m.st||st;ix=await rq(tx(['x']).objectStore('x').getAll())}
+else{var o=null;try{o=JSON.parse(localStorage.getItem('clinic_v1'))}catch(e){}if(o&&o.p&&o.p.length)await imp(o);else await sm()}
+ix.forEach(function(e){e.k=e.n.toLowerCase();im[e.id]=e});draw();
+try{navigator.storage.persist();navigator.storage.estimate().then(function(e){if(e.quota&&e.usage/e.quota>.8){window.qw=1;if(!view)draw()}})}catch(e){}}
+function warn(){var h='';
+if(window.sf)h+='<div class="c bad" style="border-color:var(--bad)">⚠ فشل حفظ آخر تغيير! المساحة ممتلئة أو التخزين غير متاح. نزّل نسخة احتياطية الآن.</div>';
+else if(window.qw)h+='<div class="c bad" style="border-color:var(--bad)">⚠ مساحة التخزين قاربت تمتلئ. نزّل نسخة احتياطية.</div>';
+if(ix.length&&(!db.lb||Date.now()-db.lb>6048e5))h+='<div class="c" style="border-color:var(--pr)">💾 '+(db.lb?'مرّ أكثر من أسبوع على آخر نسخة احتياطية.':'ما نزّلت نسخة احتياطية بعد.')+' <button onclick="dl()">نزّل نسخة الآن</button></div>';
+return h}
+function ak(a,b){return (a.d+a.t).localeCompare(b.d+b.t)}
+function flt(){if(dirty){srt=ix.slice().sort(function(a,b){return a.l<b.l?1:a.l>b.l?-1:0});dirty=0}var k=q.toLowerCase();return k?srt.filter(function(e){return e.k.indexOf(k)>-1}):srt}
+function rows(){var l=flt(),s=l.slice(0,pg);return (s.length?s.map(function(e){return '<div class="p" onclick="go2(\''+e.id+'\')"><div><b>'+E(e.n)+'</b><div class="mu">آخر علاج: '+(e.l||'—')+'</div></div><b class="'+(e.r>0?'bad':'ok')+'">'+(e.r>0?'متبقي '+F(e.r):'مسدّد')+'</b></div>'}).join(''):'<p class="mu">لا يوجد مرضى.</p>')+(l.length>pg?'<button class="l" style="width:100%;margin-top:8px" onclick="pg+=50;list()">عرض المزيد ('+(l.length-pg)+')</button>':'')+'<p class="mu">'+l.length+' مريض</p>'}
+function list(){document.getElementById('ls').innerHTML=rows()}
+function lt(){clearTimeout(tm);tm=setTimeout(list,150)}
+function apSec(u,o){var L=function(a){var n=im[a.pid];return '<div class="p" onclick="go2(\''+a.pid+'\')"><span'+(a.d==today()?' style="color:var(--pr)"':'')+'>'+E(a.d)+' '+E(a.t)+' — <b>'+E(n?n.n:'؟')+'</b> '+E(a.n)+'</span><button class="d" onclick="event.stopPropagation();dn(\''+a.id+'\')">تم ✓</button></div>'};
+return '<div class="c"><h2>📅 المواعيد</h2><p class="mu">لحجز موعد افتح ملف المريض.</p>'+(o.length?'<p class="bad">⚠ مواعيد فائتة:</p>'+o.map(L).join(''):'')+u.map(L).join('')+(u.length||o.length?'':'<p class="mu">لا مواعيد.</p>')+'</div>'}
+function home(){var lab=sum(db.lab,'amt'),td=today(),ups=db.ap.filter(function(a){return a.d>=td}).sort(ak),od=db.ap.filter(function(a){return a.d<td}).sort(ak),nt=db.ap.filter(function(a){return a.d==td}).length,m={},k;
+for(k in st.mon)m[k]={r:st.mon[k],l:0};
+db.lab.forEach(function(x){var k=x.d.slice(0,7);m[k]=m[k]||{r:0,l:0};m[k].l+=+x.amt});var ks=Object.keys(m).sort().reverse();
+return '<div class="r"><h1 style="flex:3">🦷 إدارة العيادة</h1><button class="l" onclick="setLang()">'+(LG=='en'?'عربي':'EN')+'</button><button class="l" onclick="lock()">🔒 قفل</button></div>'+warn()+(nt?'<div class="c" style="border-color:var(--pr)">🔔 عندك '+nt+' موعد اليوم</div>':'')
++'<div class="g">'+S('إيرادات العيادة (المقبوض)',F(st.rev),'ok')+S('مدفوعات المخبر',F(lab),'bad')+S('الصافي بعد المخبر',F(st.rev-lab))+S('إجمالي التكاليف',F(st.bil))+S('المتبقي على المرضى',F(st.bil-st.rev),'bad')+S('مستحقات المخبر المتبقية',F(st.ld-lab),'bad')+S('عدد المرضى',ix.length)+'</div>'
++'<div class="c"><h2>المرضى</h2><div class="r"><input id="q" placeholder="ابحث باسم المريض..." value="'+E(q)+'" oninput="q=this.value;pg=50;lt()"><button onclick="view=\'new\';draw()">+ مريض جديد</button></div><div id="ls">'+rows()+'</div></div>'
++apSec(ups,od)
++'<div class="c"><h2>📊 تقرير حسب الفترة</h2><div class="r"><input id="ra" type="date" value="'+RA+'"><input id="rb" type="date" value="'+RB+'"><button onclick="rep()">عرض</button></div><div id="rp"></div></div>'
++'<div class="c"><h2>مدفوعات المخبر</h2><div class="r"><input id="ld" type="date" value="'+today()+'"><input id="la" type="number" placeholder="المبلغ"><input id="ln" placeholder="ملاحظة / اسم المخبر"><button onclick="addLab()">إضافة</button></div>'
++db.lab.slice().sort(function(a,b){return b.d.localeCompare(a.d)}).map(function(x){return '<div class="p" style="cursor:default"><span>'+E(x.d)+' — '+E(x.n)+'</span><span><b class="bad">'+F(x.amt)+'</b><button class="d" onclick="del(\'lab\',\''+x.id+'\')">✕</button></span></div>'}).join('')+'</div>'
++'<div class="c"><h2>التفاصيل المالية الشهرية</h2><div class="x"><table><tr><th>الشهر</th><th>الإيرادات</th><th>المخبر</th><th>الصافي</th></tr>'+ks.map(function(k){return '<tr><td>'+k+'</td><td class="ok">'+F(m[k].r)+'</td><td class="bad">'+F(m[k].l)+'</td><td>'+F(m[k].r-m[k].l)+'</td></tr>'}).join('')+'</table></div></div>'
++'<div class="c"><h2>إعدادات ونسخ احتياطي</h2><div class="r"><input value="'+E(db.cur)+'" onchange="setCur(this.value)" placeholder="العملة"><button class="l" onclick="chg()">🔑 تغيير الرمز</button><button class="l" onclick="dl()">⬇ تنزيل نسخة احتياطية</button></div><div class="r"><label class="mu">استرجاع من ملف: <input type="file" accept=".json" onchange="rf2(this)"></label><button class="l" onclick="rc()">🔄 إعادة حساب الأرقام</button></div><p class="mu">البيانات محفوظة على هذا الجهاز. نزّل نسخة احتياطية بشكل دوري.</p></div>'}
+function setCur(x){db.cur=x||'$';sm();draw()}
+function form(p){p=p||{};return '<div class="c"><h2>'+(p.id?'تعديل بيانات المريض':'مريض جديد')+'</h2><input id="n" placeholder="الاسم" value="'+E(p.name)+'"><div class="r"><input id="a" type="number" placeholder="العمر" value="'+E(p.age)+'"><input id="s" placeholder="السكن" value="'+E(p.addr)+'"></div><input id="ph" placeholder="رقم الهاتف" value="'+E(p.ph)+'"><textarea id="h" rows="3" placeholder="التاريخ الطبي (أمراض، حساسية، أدوية...)">'+E(p.hist)+'</textarea><div class="r"><button onclick="sp(\''+(p.id||'')+'\')">حفظ</button><button class="l" onclick="cf()">إلغاء</button></div></div>'}
+function cf(){view=(P&&view!='new')?P.id:null;draw()}
+async function sp(id){var n=v('n').trim();if(!n)return alert('اكتب اسم المريض');var p=id?P:{id:uid(),t:[],pay:[]};if(!id){P=p;pc=null}
+p.name=n;p.age=v('a');p.addr=v('s');p.hist=v('h');p.ph=v('ph');await sv(p);view=p.id;draw()}
+function pat(p){var r=cost(p)-paid(p),X=function(a,k){return a.slice().sort(function(a,b){return b.d.localeCompare(a.d)})};
+return '<div class="r"><button class="l" onclick="view=null;draw()">→ رجوع</button></div><h1>'+E(p.name)+'</h1>'
++'<div class="c"><div class="mu">العمر: '+E(p.age||'—')+' | السكن: '+E(p.addr||'—')+' | الهاتف: '+E(p.ph||'—')+'</div><p><b>التاريخ الطبي:</b> '+E(p.hist||'—')+'</p><div class="r"><button class="l" onclick="view=\'ed:'+p.id+'\';draw()">تعديل</button><button class="l bad" onclick="delP()">حذف المريض</button></div></div>'
++'<div class="g">'+S('الحساب الكلي',F(cost(p)))+S('المسدّد',F(paid(p)),'ok')+S('المتبقي',F(r),r>0?'bad':'ok')+S('تكلفة المخبر لحالته',F(sum(p.t,'lab')))+'</div>'
++'<div class="c"><h2>العلاجات</h2><div class="r"><input id="td" type="date" value="'+today()+'"><input id="tt" placeholder="نوع العلاج (حشوة، قلع، تنظيف...)"><input id="tc" type="number" placeholder="التكلفة"><input id="tl" type="number" placeholder="تكلفة المخبر (اختياري)"><button onclick="addT()">إضافة</button></div>'
++X(p.t).map(function(x){return '<div class="p" style="cursor:default"><span>'+E(x.d)+' — '+E(x.type)+(x.lab?' <span class="mu">(مخبر '+F(x.lab)+')</span>':'')+'</span><span><b>'+F(x.cost)+'</b><button class="d" onclick="delX(\'t\',\''+x.id+'\')">✕</button></span></div>'}).join('')+'</div>'
++'<div class="c"><h2>الدفعات</h2><div class="r"><input id="pd" type="date" value="'+today()+'"><input id="pa" type="number" placeholder="المبلغ المدفوع"><button onclick="addP()">تسجيل دفعة</button></div>'
++X(p.pay).map(function(x){return '<div class="p" style="cursor:default"><span>'+E(x.d)+'</span><span><b class="ok">'+F(x.amt)+'</b><button class="d" onclick="delX(\'pay\',\''+x.id+'\')">✕</button></span></div>'}).join('')+'</div>'
++'<div class="c"><h2>📅 حجز موعد</h2><div class="r"><input id="ad" type="date" value="'+today()+'"><input id="at" type="time" value="10:00"><input id="an" placeholder="ملاحظة"><button onclick="addAp()">حجز</button></div></div>'}
+async function addT(){var c=+v('tc');if(!v('tt').trim()||v('tc')===''||!(c>=0))return alert('أدخل نوع العلاج والتكلفة');P.t.push({id:uid(),d:v('td'),type:v('tt').trim(),cost:c,lab:+v('tl')||0});await sv(P);draw()}
+async function addP(){var a=+v('pa');if(!(a>0))return alert('أدخل مبلغاً صحيحاً');P.pay.push({id:uid(),d:v('pd'),amt:a});await sv(P);draw()}
+async function delX(k,x){if(!confirm('حذف هذا السجل؟'))return;P[k]=P[k].filter(function(i){return i.id!=x});await sv(P);draw()}
+async function addAp(){db.ap.push({id:uid(),pid:P.id,d:v('ad'),t:v('at'),n:v('an').trim()});await sm();alert('تم حجز الموعد')}
+async function dn(id){db.ap=db.ap.filter(function(a){return a.id!=id});await sm();draw()}
+async function addLab(){var a=+v('la');if(!(a>0))return alert('أدخل المبلغ');db.lab.push({id:uid(),d:v('ld'),amt:a,n:v('ln').trim()||'مخبر'});await sm();draw()}
+async function del(k,x){if(!confirm('حذف هذا السجل؟'))return;db[k]=db[k].filter(function(i){return i.id!=x});await sm();draw()}
+async function delP(){if(!confirm('حذف المريض وكل سجلاته؟'))return;var id=P.id,t=tx(['p','x','m'],'readwrite');t.objectStore('p').delete(id);t.objectStore('x').delete(id);if(pc)ap2(pc,-1);db.ap=db.ap.filter(function(a){return a.pid!=id});t.objectStore('m').put(mo(),'meta');
+try{await done(t)}catch(e){fail()}ix=ix.filter(function(e){return e.id!=id});delete im[id];dirty=1;P=null;pc=null;view=null;draw()}
+async function rep(){RA=v('ra');RB=v('rb');var el=document.getElementById('rp');el.innerHTML='<p class="mu">جاري الحساب...</p>';var Rv=0,T=0,C=0,pn=0,ln=0,rw=[];
+await new Promise(function(ok,no){var r=tx(['p']).objectStore('p').openCursor();r.onsuccess=function(){var c=r.result;if(!c)return ok();var p=c.value,h=0;p.pay.forEach(function(x){if(x.d>=RA&&x.d<=RB)Rv+=+x.amt});p.t.forEach(function(x){if(x.d>=RA&&x.d<=RB){T++;C+=+x.cost;h=1;rw.push([x.d,p.name,x.type,x.cost])}});pn+=h;c.continue()};r.onerror=no});
+db.lab.forEach(function(x){if(x.d>=RA&&x.d<=RB)ln+=+x.amt});rw.sort(function(a,b){return a[0]<b[0]?1:a[0]>b[0]?-1:0});
+el.innerHTML='<div class="g">'+S('المقبوض',F(Rv),'ok')+S('دفعات المخبر',F(ln),'bad')+S('الصافي',F(Rv-ln))+S('علاجات / مرضى',T+' / '+pn)+S('قيمة العلاجات',F(C))+'</div><div class="x"><table><tr><th>التاريخ</th><th>المريض</th><th>العلاج</th><th>التكلفة</th></tr>'+rw.slice(0,60).map(function(r){return '<tr><td>'+E(r[0])+'</td><td>'+E(r[1])+'</td><td>'+E(r[2])+'</td><td>'+F(r[3])+'</td></tr>'}).join('')+'</table></div>'+(rw.length>60?'<p class="mu">يُعرض آخر 60 علاجاً من '+rw.length+'.</p>':'')}
+async function dl(){try{var a=await rq(tx(['p']).objectStore('p').getAll()),u=URL.createObjectURL(new Blob([JSON.stringify({p:a,lab:db.lab,ap:db.ap,cur:db.cur})],{type:'application/json'})),l=document.createElement('a');l.href=u;l.download='clinic-backup-'+today()+'.json';document.body.appendChild(l);l.click();l.remove();db.lb=Date.now();await sm();draw()}catch(e){alert('تعذّر إنشاء النسخة: '+e)}}
+function rf2(i){var f=i.files[0];if(!f)return;var r=new FileReader();r.onload=async function(){try{var d=JSON.parse(r.result);if(!d.p)throw 0;if(!confirm('سيتم استبدال البيانات الحالية. متابعة؟'))return;await imp(d);P=null;view=null;draw()}catch(e){alert('ملف غير صالح')}};r.readAsText(f)}
+function draw(){var h;if(view=='new')h=form();else if(view&&view.indexOf('ed:')==0&&P&&P.id==view.slice(3))h=form(P);else if(view&&P&&P.id==view)h=pat(P);else{view=null;h=home()}document.getElementById('app').innerHTML=h;window.scrollTo(0,0)}
+var LK='clinic_lock',fails=0,until=0;
+async function H(c){var b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('clinic:'+c));return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0')}).join('')}
+function lockUI(set,msg){document.getElementById('app').innerHTML='<div class="c" style="max-width:360px;margin:12vh auto;text-align:center"><h1>🦷 إدارة العيادة</h1><p class="mu">'+(set?'أنشئ رمز دخول (٦ خانات أو أكثر)':'أدخل رمز الدخول')+'</p><input id="kc" type="password" autocomplete="off" style="text-align:center" onkeydown="if(event.key===\'Enter\')go()"><button onclick="go()" style="width:100%">'+(set?'حفظ ودخول':'دخول')+'</button><p class="bad">'+(msg||'')+'</p><button class="l" onclick="setLang()">'+(LG=='en'?'عربي':'EN')+'</button></div>'}
+function enter(){sessionStorage.setItem('cu','1');try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(function(){})}catch(e){}boot().catch(function(e){document.getElementById('app').innerHTML='<div class="c bad">تعذّر فتح قاعدة البيانات: '+E(e)+'</div>'})}
+function lock(){sessionStorage.removeItem('cu');lockUI(0)}
+async function go(){var c=v('kc'),h0=localStorage.getItem(LK);if(Date.now()<until)return lockUI(!h0,'انتظر نصف دقيقة ثم حاول');
+if(!h0){if(c.length<6)return lockUI(1,'الرمز قصير');localStorage.setItem(LK,await H(c));return enter()}
+if(await H(c)===h0){fails=0;return enter()}
+if(++fails>=5){until=Date.now()+30000;fails=0}lockUI(0,'رمز غير صحيح')}
+async function chg(){var c=prompt('الرمز الجديد (٦ خانات أو أكثر)');if(!c)return;if(c.length<6)return alert('الرمز قصير');localStorage.setItem(LK,await H(c));alert('تم تغيير الرمز')}
+var SB='https://qvkxxiextrpbmbuyqttg.supabase.co',SKEY='sb_publishable_lNo8hEK6c5iAo7mYdZbMew_mqOcIUQf';
+var LM={invalid:'الكود غير صحيح',revoked:'تم إيقاف هذا الكود. تواصل مع مزوّد التطبيق.',expired:'انتهت صلاحية الكود',limit:'تم تجاوز عدد الأجهزة المسموح لهذا الكود',net:'تعذّر الاتصال بالإنترنت. اتصل بالإنترنت للتحقق من الكود.',srv:'تعذّر التحقق الآن. حاول لاحقاً.'};
+function did(){var d=localStorage.getItem('clinic_dev');if(!d){var a=new Uint8Array(8),A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';crypto.getRandomValues(a);d=Array.from(a).map(function(x){return A[x%32]}).join('');d=d.slice(0,4)+'-'+d.slice(4);localStorage.setItem('clinic_dev',d)}return d}
+async function srv(c){try{var ac=new AbortController(),t=setTimeout(function(){ac.abort()},8000),r=await fetch(SB+'/rest/v1/rpc/activate',{method:'POST',signal:ac.signal,headers:{'apikey':SKEY,'Content-Type':'application/json'},body:JSON.stringify({p_code:c,p_device:did()})});clearTimeout(t);if(!r.ok)return {ok:false,err:'srv'};var j=await r.json();return j&&typeof j.ok=='boolean'?j:{ok:false,err:'srv'}}catch(e){return {ok:false,err:'net'}}}
+async function lic(){var c=null,t=0;try{c=localStorage.getItem('clinic_lic');t=+localStorage.getItem('clinic_ok')||0}catch(e){}
+if(!c)return '';if(localStorage.getItem('clinic_perm')=='1')return 'ok';var age=Date.now()-t;if(age>=0&&age<7*864e5)return 'ok';
+var r=await srv(c);if(r.ok){localStorage.setItem('clinic_ok',Date.now());if(r.perm)localStorage.setItem('clinic_perm','1');return 'ok'}
+if(r.err=='net'||r.err=='srv')return age>=0&&age<30*864e5?'ok':'net';
+localStorage.removeItem('clinic_ok');localStorage.removeItem('clinic_lic');localStorage.removeItem('clinic_perm');return r.err}
+function actUI(msg){document.getElementById('app').innerHTML='<div class="c" style="max-width:380px;margin:10vh auto;text-align:center"><h1>🦷 إدارة العيادة</h1><h2>تفعيل التطبيق</h2><p class="mu">أدخل كود التفعيل الذي استلمته</p><input id="ac" placeholder="كود التفعيل" autocomplete="off" style="direction:ltr;text-align:center"><button onclick="act()" style="width:100%">تفعيل</button><p class="bad">'+(msg||'')+'</p><p class="mu">معرّف جهازك: <b dir="ltr">'+did()+'</b></p><button class="l" onclick="setLang()">'+(LG=='en'?'عربي':'EN')+'</button></div>'}
+async function act(){var c=v('ac').replace(/\s+/g,'').toUpperCase();if(!c)return;var r=await srv(c);if(r.ok){localStorage.setItem('clinic_lic',c);localStorage.setItem('clinic_ok',Date.now());if(r.perm)localStorage.setItem('clinic_perm','1');gate()}else actUI(LM[r.err]||LM.srv)}
+async function gate(){var l=await lic();if(l!='ok')return actUI(l?LM[l]:'');var h0=null;try{h0=localStorage.getItem(LK)}catch(e){}
+var m=location.hash.match(/k=([^&]*)/);if(m){history.replaceState(null,'',location.pathname+location.search);if(h0&&await H(decodeURIComponent(m[1]))===h0)return enter()}
+if(h0&&sessionStorage.getItem('cu'))return enter();lockUI(!h0)}
+gate();
+if('serviceWorker' in navigator&&location.protocol.indexOf('http')==0)navigator.serviceWorker.register('sw.js').catch(function(){});
+</script></body></html>
